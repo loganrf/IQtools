@@ -1,7 +1,6 @@
 from enum import Enum
 import numpy as np
 from scipy.signal import get_window
-import math
 
 
 class DataFormats(Enum):
@@ -15,7 +14,7 @@ def load_IQ(file, bits):
     scale = (2 ** (bits - 1))
     for line in file:
         splitLine = line.split(',')
-        value = (complex(float(splitLine[0].strip())/scale, float(splitLine[1].strip())/scale))
+        value = (complex(float(splitLine[0].strip()) / scale, float(splitLine[1].strip()) / scale))
         samples.append(value)
     return samples
 
@@ -43,7 +42,7 @@ class IQdata:
         :param fileName:
         """
         file = open(fileName, 'r')
-        if (self.format == DataFormats.IQ):
+        if self.format == DataFormats.IQ:
             self.samples = load_IQ(file, self.bits)
         else:
             raise ValueError('Unsupported IQ File Format Supplied')
@@ -71,6 +70,6 @@ class SignalAnalyzer():
         TODO: add support for basic manipulation of data scaling/offset
         :rtype: tuple of frequency array and array of dBFS spectrum values
         """
-        magData = 20 * np.log10(np.abs(self.dataF))+13.32970267796
+        magData = 20 * np.log10(np.abs(self.dataF)) + 13.32970267796
         freqData = self.f
         return freqData, magData

@@ -11,20 +11,21 @@ import numpy as np
 if __name__ == '__main__':
 
     # Setting up a sample file
-    sampleRate = 1e6 # Complex sample rate
-    sigFreq = 200e3 # This is the frequency of the sample sinusoid. Should be < sample rate
-    sigLen = 0.1 # Length of signal in seconds
-    SAMPLE_OVERRIDE = True # If you want to disable regeneration of the sample file every run then set to False
-    Bits = 12 # Signed bits to represent sample values
-    dBFS = -10 # Set sinusoid amplitude relative to full scale
-    codeAmplitude = ((2**(Bits-1))*(10**(dBFS/20)))
-    if((not os.path.isfile('samples.csv')) or SAMPLE_OVERRIDE):
-        t = np.arange(0, sigLen, 1/sampleRate) # Creates an array of discrete timepoints for the given sample rate/len
-        dataI = (codeAmplitude)*np.sin(t*np.pi*2*sigFreq) # Create the in phase samples
-        dataQ = (codeAmplitude) * np.sin(t * np.pi * 2 * sigFreq-(np.pi/2)) # Create the imaginary samples
-        file = open('samples.csv', 'w') # Create a file for the samples
-        for i in range(len(t)): # This loop stores all samples in a typical IQ csv format
-            file.writelines(str(int(dataI[i]))+', '+str(int(dataQ[i]))+'\n')
+    sampleRate = 1e6  # Complex sample rate
+    sigFreq = 200e3  # This is the frequency of the sample sinusoid. Should be < sample rate
+    sigLen = 0.1  # Length of signal in seconds
+    SAMPLE_OVERRIDE = True  # If you want to disable regeneration of the sample file every run then set to False
+    Bits = 12  # Signed bits to represent sample values
+    dBFS = -10  # Set sinusoid amplitude relative to full scale
+    codeAmplitude = ((2 ** (Bits - 1)) * (10 ** (dBFS / 20)))
+    if (not os.path.isfile('samples.csv')) or SAMPLE_OVERRIDE:
+        t = np.arange(0, sigLen,
+                      1 / sampleRate)  # Creates an array of discrete timepoints for the given sample rate/len
+        dataI = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq)  # Create the in phase samples
+        dataQ = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq - (np.pi / 2))  # Create the imaginary samples
+        file = open('samples.csv', 'w')  # Create a file for the samples
+        for i in range(len(t)):  # This loop stores all samples in a typical IQ csv format
+            file.writelines(str(int(dataI[i])) + ', ' + str(int(dataQ[i])) + '\n')
         file.close()
 
     # Example of how to ingest a datafile. Note that bits must be set for accurate dBFS scaling
@@ -38,12 +39,8 @@ if __name__ == '__main__':
     plt.plot(freq, mag)
     plt.xlabel('Freq (MHz)')
     plt.ylabel('Magnitude (dBFS)')
-    plt.title('Sample Sinusoid\nPeak Power: '+str(int(max(mag)))+'dBFS')
+    plt.title('Sample Sinusoid\nPeak Power: ' + str(int(max(mag))) + 'dBFS')
     plt.grid()
     plt.show()
-
-
-
-
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
