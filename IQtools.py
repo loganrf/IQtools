@@ -12,10 +12,10 @@ class DataFormats(Enum):
 
 def load_IQ(file, bits):
     samples = []
-    scale = 2 ** (bits - 1) * math.sqrt(2)
+    scale = (2 ** (bits - 1))
     for line in file:
         splitLine = line.split(',')
-        value = (complex(float(splitLine[0].strip()), float(splitLine[1].strip()))) / scale
+        value = (complex(float(splitLine[0].strip())/scale, float(splitLine[1].strip())/scale))
         samples.append(value)
     return samples
 
@@ -55,7 +55,6 @@ class SignalAnalyzer():
         Class requires an IQdata object containing samples and their metadata
         :param data:
         """
-        print('Initializing Spec An')
         self.dataT = data
         self.t = np.arange(0, self.dataT.datalen * (1 / self.dataT.sampleRate), 1 / self.dataT.sampleRate)
         self.getDataF()
@@ -72,6 +71,6 @@ class SignalAnalyzer():
         TODO: add support for basic manipulation of data scaling/offset
         :rtype: tuple of frequency array and array of dBFS spectrum values
         """
-        magData = 20 * np.log10(np.abs(self.dataF))+16
+        magData = 20 * np.log10(np.abs(self.dataF))+13.32970267796
         freqData = self.f
         return freqData, magData

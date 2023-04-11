@@ -16,9 +16,8 @@ if __name__ == '__main__':
     sigLen = 0.1 # Length of signal in seconds
     SAMPLE_OVERRIDE = True # If you want to disable regeneration of the sample file every run then set to False
     Bits = 12 # Signed bits to represent sample values
-    dBFS = 0 # Set sinusoid amplitude relative to full scale
-    codeAmplitude = ((2**Bits-1)*(10**(dBFS/20)))/2
-    print(codeAmplitude)
+    dBFS = -10 # Set sinusoid amplitude relative to full scale
+    codeAmplitude = ((2**(Bits-1))*(10**(dBFS/20)))
     if((not os.path.isfile('samples.csv')) or SAMPLE_OVERRIDE):
         t = np.arange(0, sigLen, 1/sampleRate) # Creates an array of discrete timepoints for the given sample rate/len
         dataI = (codeAmplitude)*np.sin(t*np.pi*2*sigFreq) # Create the in phase samples
