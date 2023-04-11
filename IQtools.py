@@ -72,7 +72,6 @@ class SignalAnalyzer():
         TODO: add support for basic manipulation of data scaling/offset
         :rtype: tuple of frequency array and array of dBFS spectrum values
         """
-        magData = 20 * np.log10(np.abs(self.dataF))
+        magData = 20 * np.log10(np.abs(self.dataF))+16
         freqData = self.f
-        print(freqData)
         return freqData, magData
