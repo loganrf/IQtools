@@ -21,6 +21,8 @@
 from enum import Enum
 import numpy as np
 from scipy.signal import get_window
+import math
+import pandas
 
 
 class DataFormats(Enum):
@@ -67,6 +69,12 @@ class IQdata:
         else:
             raise ValueError('Unsupported IQ File Format Supplied')
 
+class PeakSearch():
+    def __init__(self, data: (float, float)):
+        self.data = [data[0], data[1]]
+
+    def getPeaks(self, xThreshold = (-math.inf, math.inf), yThreshold = (-math.inf, math.inf)):
+        pass
 
 class SignalAnalyzer():
     def __init__(self, data: IQdata):
@@ -93,3 +101,13 @@ class SignalAnalyzer():
         magData = 20 * np.log10(np.abs(self.dataF)) + 13.32970267796
         freqData = self.f
         return freqData, magData
+
+
+class SignalGenerator():
+
+    def __init__(self, sampleRate, bits, duration):
+        self.sampleRate = sampleRate
+        self.bits = bits
+        self.duration = duration
+
+    def addSinusoid(self, frequency, makeCyclical):
