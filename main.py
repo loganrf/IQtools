@@ -29,13 +29,13 @@ if __name__ == '__main__':
 
     # Setting up a sample file
     sampleRate = 1e6  # Complex sample rate
-    sigFreq = 200e3  # This is the frequency of the sample sinusoid. Should be < sample rate
+    sigFreq = 400e3  # This is the frequency of the sample sinusoid. Should be < sample rate
     sigLen = 0.1  # Length of signal in seconds
     SAMPLE_OVERRIDE = True  # If you want to disable regeneration of the sample file every run then set to False
     Bits = 12  # Signed bits to represent sample values
-    dBFS = -10 # Set sinusoid amplitude relative to full scale
+    dBFS = -5 # Set sinusoid amplitude relative to full scale
     codeAmplitude = ((2 ** (Bits - 1)) * (10 ** (dBFS / 20)))
-    nbits = 6
+    nbits = 10
 
     if (not os.path.isfile('samples.csv')) or SAMPLE_OVERRIDE:
         t = np.arange(0, sigLen,
@@ -55,8 +55,10 @@ if __name__ == '__main__':
     sa = SignalAnalyzer(data)
     # From there a scaled spectrum can be obtained by the following line. Note that this returns a tuple
     freq, mag = sa.getSpectrumMag()
-    print(sa.getPower())
-    print(sa.getPower(maxpower=-30))
+    sigpwr = sa.getPower()
+    npwr = sa.getPower(maxpower=-100)
+    print(npwr)
+    print('Signal Power is: ',str(sigpwr)+'dBFS with a SNR of '+str(sigpwr-npwr)+'dB')
 
     # Plot example
     plt.plot(freq, mag)
