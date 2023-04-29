@@ -24,13 +24,16 @@ import numpy as np
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
+    a = DiscreteSignal('Sinusoid', {'freq':100,'phase':30})
+    print(a)
+
     # Setting up a sample file
     sampleRate = 1e6  # Complex sample rate
     sigFreq = 200e3  # This is the frequency of the sample sinusoid. Should be < sample rate
     sigLen = 0.1  # Length of signal in seconds
     SAMPLE_OVERRIDE = True  # If you want to disable regeneration of the sample file every run then set to False
     Bits = 12  # Signed bits to represent sample values
-    dBFS = -10  # Set sinusoid amplitude relative to full scale
+    dBFS = -10 # Set sinusoid amplitude relative to full scale
     codeAmplitude = ((2 ** (Bits - 1)) * (10 ** (dBFS / 20)))
     if (not os.path.isfile('samples.csv')) or SAMPLE_OVERRIDE:
         t = np.arange(0, sigLen,
@@ -48,6 +51,7 @@ if __name__ == '__main__':
     sa = SignalAnalyzer(data)
     # From there a scaled spectrum can be obtained by the following line. Note that this returns a tuple
     freq, mag = sa.getSpectrumMag()
+    sa.getPower()
 
     # Plot example
     plt.plot(freq, mag)

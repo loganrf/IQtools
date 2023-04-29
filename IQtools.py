@@ -82,11 +82,13 @@ class SignalAnalyzer():
         Class requires an IQdata object containing samples and their metadata
         :param data:
         """
+        self.window = 'boxcar'
         self.dataT = data
         self.t = np.arange(0, self.dataT.datalen * (1 / self.dataT.sampleRate), 1 / self.dataT.sampleRate)
         self.getDataF()
 
     def getDataF(self, windowName='flattop'):
+        self.window = windowName
         window = get_window(windowName, self.dataT.datalen)
         windowedData = self.dataT.samples * window
         self.dataF = np.fft.fft(windowedData) / self.dataT.datalen
@@ -98,9 +100,35 @@ class SignalAnalyzer():
         TODO: add support for basic manipulation of data scaling/offset
         :rtype: tuple of frequency array and array of dBFS spectrum values
         """
-        magData = 20 * np.log10(np.abs(self.dataF)) + 13.32970267796
+        magData = 20 * np.log10(np.abs(self.dataF))
         freqData = self.f
         return freqData, magData
+
+    def getPower(self, maxpower=-np.inf):
+        maglin = np.abs(self.dataF)**2
+        maxpowerLin = 10**(maxpower/10)
+        power = np.sqrt(sum(maglin))
+        window = get_window(self.window, self.dataT.datalen)
+
+        ecf = 1/np.sqrt(sum(window**2)/self.dataT.datalen)
+
+        power = power*ecf
+
+        print('Power: '+str(20*np.log10(power)))
+
+
+
+class DiscreteSignal():
+    def __init__(self, description, params: {}):
+        self.description = description
+        self.params = params
+
+    def __str__(self):
+        info = self.description + ' ('
+        for p,v in self.params.items():
+            info+=p+':'+str(v)+', '
+        info = info[:-2]+')'
+        return info
 
 
 class SignalGenerator():
@@ -109,5 +137,12 @@ class SignalGenerator():
         self.sampleRate = sampleRate
         self.bits = bits
         self.duration = duration
+        self.t = np.arange(0, self.duration, 1/self.sampleRate)
+        self.s = np.zeros(np.size(self.t))
+        signals = []
 
-    def addSinusoid(self, frequency, makeCyclical):
+    def addSinusoid(self, frequency, phaseRads = 0, makeCyclical = False):
+        if(makeCyclical):
+            pass
+
+
