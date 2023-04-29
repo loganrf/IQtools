@@ -35,11 +35,15 @@ if __name__ == '__main__':
     Bits = 12  # Signed bits to represent sample values
     dBFS = -10 # Set sinusoid amplitude relative to full scale
     codeAmplitude = ((2 ** (Bits - 1)) * (10 ** (dBFS / 20)))
+    nbits = 6
+
     if (not os.path.isfile('samples.csv')) or SAMPLE_OVERRIDE:
         t = np.arange(0, sigLen,
                       1 / sampleRate)  # Creates an array of discrete timepoints for the given sample rate/len
-        dataI = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq)  # Create the in phase samples
-        dataQ = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq - (np.pi / 2))  # Create the imaginary samples
+        noiseI = np.random.rand(len(t))*(2**(Bits-nbits))-2**(Bits-nbits-1)
+        noiseQ = np.random.rand(len(t))*(2**(Bits-nbits))-2**(Bits-nbits-1)
+        dataI = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq) + noiseI # Create the in phase samples
+        dataQ = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq - (np.pi / 2)) + noiseQ  # Create the imaginary samples
         file = open('samples.csv', 'w')  # Create a file for the samples
         for i in range(len(t)):  # This loop stores all samples in a typical IQ csv format
             file.writelines(str(int(dataI[i])) + ', ' + str(int(dataQ[i])) + '\n')
@@ -51,7 +55,8 @@ if __name__ == '__main__':
     sa = SignalAnalyzer(data)
     # From there a scaled spectrum can be obtained by the following line. Note that this returns a tuple
     freq, mag = sa.getSpectrumMag()
-    sa.getPower()
+    print(sa.getPower())
+    print(sa.getPower(maxpower=-30))
 
     # Plot example
     plt.plot(freq, mag)

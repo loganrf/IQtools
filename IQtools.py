@@ -87,7 +87,7 @@ class SignalAnalyzer():
         self.t = np.arange(0, self.dataT.datalen * (1 / self.dataT.sampleRate), 1 / self.dataT.sampleRate)
         self.getDataF()
 
-    def getDataF(self, windowName='flattop'):
+    def getDataF(self, windowName='boxcar'):
         self.window = windowName
         window = get_window(windowName, self.dataT.datalen)
         windowedData = self.dataT.samples * window
@@ -104,17 +104,24 @@ class SignalAnalyzer():
         freqData = self.f
         return freqData, magData
 
-    def getPower(self, maxpower=-np.inf):
+    def getPower(self, maxpower=np.inf):
         maglin = np.abs(self.dataF)**2
         maxpowerLin = 10**(maxpower/10)
-        power = np.sqrt(sum(maglin))
+        maglinFiltered = []
+        for val in maglin:
+            if(val>maxpowerLin):
+                maglinFiltered+=[0]
+            else:
+                maglinFiltered+=[val]
+
+        power = np.sqrt(sum(maglinFiltered))
         window = get_window(self.window, self.dataT.datalen)
 
         ecf = 1/np.sqrt(sum(window**2)/self.dataT.datalen)
 
         power = power*ecf
 
-        print('Power: '+str(20*np.log10(power)))
+        return 20*np.log10(power)
 
 
 
