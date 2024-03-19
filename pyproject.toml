@@ -12,8 +12,13 @@ pandas = "^2.2.1"
 numpy = "^1.26.4"
 scipy = "^1.12.0"
 matplotlib = "^3.8.3"
+argparse = "^1.4.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+get_spectrum = "IQtools.CLI:get_spectrum"
+greet = "greet.location:cli"
