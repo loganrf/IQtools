@@ -19,21 +19,32 @@
 import IQtools
 import matplotlib.pyplot as plt
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    # Create a signal generator instance to creat an IQ file. Use a 10MSps complex sample rate, 12 bit signed ints and
+    # a 0.1s duration
     sg = IQtools.SignalGenerator(10E6, 12, 0.1)
-    sg.addSinusoid(0.5, 1E6)
+
+    # Add 3 sinusoids to the signal at -1MHz, 2MHz, and 2.5MHz. Amplitude is defined in terms of FS range (0-1)
+    sg.addSinusoid(0.5, -1E6)
     sg.addSinusoid(0.3, 2E6)
     sg.addSinusoid(0.1, 2.5E6)
 
+    # Export IQ samples from signal to a csv
     sg.saveToFile('test.csv')
 
+    # Pull the generated IQ files back into IQTools with an appropriate sample rate/bitness
     generatedData = IQtools.IQdata('test.csv', 10E6, 12)
 
+    # Generate a signal analyzer instance
     sa = IQtools.SignalAnalyzer(generatedData)
+    # Generate spectrum
     f, mag = sa.getSpectrumMag(frequencyBase_Hz=1E6)
+    # Get total inband power
     totalPower = sa.getPower()
+    # Get a list of peaks greater than -30dBFS
     peaks, peaksF = sa.getPeakList(minpower=-30, frequencyBase_Hz=1E6)
+
+    # Plot everything generated above
 
     plt.plot(f, mag)
     plt.text(-4.95, -10, 'Total Power: {power: .2f} dBFS'.format(power=totalPower))
@@ -51,4 +62,3 @@ if __name__ == '__main__':
 
 
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
