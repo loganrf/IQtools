@@ -36,7 +36,7 @@ if __name__ == '__main__':
     generatedData = IQtools.IQdata('test.csv', 10E6, 12)
 
     # Generate a signal analyzer instance
-    sa = IQtools.SignalAnalyzer(generatedData)
+    sa = IQtools.SignalAnalyzer(generatedData, ref_level=-4, ref_unit='dBm')
     # Generate spectrum
     f, mag = sa.getSpectrumMag(frequencyBase_Hz=1E6)
     # Get total inband power
@@ -47,17 +47,17 @@ if __name__ == '__main__':
     # Plot everything generated above
 
     plt.plot(f, mag)
-    plt.text(-4.95, -10, 'Total Power: {power: .2f} dBFS'.format(power=totalPower))
+    plt.text(-4.99, -13, 'Total Power: {power: .2f} {unit}'.format(power=totalPower, unit=sa.ref_unit))
     peakList = 'Peak List:\n'
     for peak, freq in zip(peaks, peaksF):
-        peakList+='{peakLevel: .2f} dBFS @ {freqPoint: .2f} MHz\n'.format(peakLevel=peak, freqPoint=freq)
-    plt.text(-4.95, -35, peakList)
+        peakList+='{peakLevel: .2f} {unit} @ {freqPoint: .2f} MHz\n'.format(peakLevel=peak, unit=sa.ref_unit, freqPoint=freq)
+    plt.text(-4.99, -38, peakList)
 
-    plt.ylabel('Amplitude (dBFS)')
+    plt.ylabel('Amplitude ({unit})'.format(unit=sa.ref_unit))
     plt.xlabel('Frequency (MHz)')
     plt.title('Sample IQ Data Plot')
     plt.grid()
-    plt.ylim((-100,0))
+    plt.ylim((-100, 0))
     plt.show()
 
 

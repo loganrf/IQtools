@@ -25,12 +25,14 @@ import math
 from .IQdata import IQdata
 
 class SignalAnalyzer():
-    def __init__(self, data: IQdata):
+    def __init__(self, data: IQdata, ref_level=0, ref_unit='dBFS'):
         """
         Class requires an IQdata object containing samples and their metadata
         :param data:
         """
         self.window = 'boxcar'
+        self.ref_level = ref_level
+        self.ref_unit = ref_unit
         self.dataT = data
         self.t = np.arange(0, self.dataT.datalen * (1 / self.dataT.sampleRate), 1 / self.dataT.sampleRate)
         self.getDataF()
@@ -48,7 +50,7 @@ class SignalAnalyzer():
         TODO: add support for basic manipulation of data scaling/offset
         :rtype: tuple of frequency array and array of dBFS spectrum values
         """
-        magData = 20 * np.log10(np.abs(self.dataF))
+        magData = 20 * np.log10(np.abs(self.dataF)) + self.ref_level
         freqData = self.f/frequencyBase_Hz
         return freqData, magData
 
@@ -71,8 +73,13 @@ class SignalAnalyzer():
 
         return 20*np.log10(power)
 
+    def getSubSpectrumMag(self, left, right, exclusiveLeft = True, exclusiveRight = False):
+        # TODO: Implement
+        pass
+
+
     def getPeakList(self, minpower = -np.inf, frequencyBase_Hz=1):
-        magData = 20*np.log10(np.abs(self.dataF))
+        f, magData = self.getSpectrumMag(frequencyBase_Hz=frequencyBase_Hz)
         prevSample = minpower
         samples = len(magData)
         peaks = []
