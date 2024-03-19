@@ -15,57 +15,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-# Sample Script to demonstrate intended use of the IQtools features
-from IQtools import *
+
+import IQtools
 import matplotlib.pyplot as plt
-import os
-import numpy as np
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    sg = IQtools.SignalGenerator(10E6, 12, 0.1)
+    sg.addSinusoid(0.5, 1E6)
+    sg.addSinusoid(0.3, 2E6)
+    sg.addSinusoid(0.1, 2.5E6)
 
-    a = DiscreteSignal('Sinusoid', {'freq':100,'phase':30})
-    print(a)
+    sg.saveToFile('test.csv')
 
-    # Setting up a sample file
-    sampleRate = 1e6  # Complex sample rate
-    sigFreq = 400e3  # This is the frequency of the sample sinusoid. Should be < sample rate
-    sigLen = 0.1  # Length of signal in seconds
-    SAMPLE_OVERRIDE = True  # If you want to disable regeneration of the sample file every run then set to False
-    Bits = 12  # Signed bits to represent sample values
-    dBFS = -5 # Set sinusoid amplitude relative to full scale
-    codeAmplitude = ((2 ** (Bits - 1)) * (10 ** (dBFS / 20)))
-    nbits = 10
+    generatedData = IQtools.IQdata('test.csv', 10E6, 12)
 
-    if (not os.path.isfile('samples.csv')) or SAMPLE_OVERRIDE:
-        t = np.arange(0, sigLen,
-                      1 / sampleRate)  # Creates an array of discrete timepoints for the given sample rate/len
-        noiseI = np.random.rand(len(t))*(2**(Bits-nbits))-2**(Bits-nbits-1)
-        noiseQ = np.random.rand(len(t))*(2**(Bits-nbits))-2**(Bits-nbits-1)
-        dataI = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq) + noiseI # Create the in phase samples
-        dataQ = codeAmplitude * np.sin(t * np.pi * 2 * sigFreq - (np.pi / 2)) + noiseQ  # Create the imaginary samples
-        file = open('samples.csv', 'w')  # Create a file for the samples
-        for i in range(len(t)):  # This loop stores all samples in a typical IQ csv format
-            file.writelines(str(int(dataI[i])) + ', ' + str(int(dataQ[i])) + '\n')
-        file.close()
+    sa = IQtools.SignalAnalyzer(generatedData)
+    f, mag = sa.getSpectrumMag(frequencyBase_Hz=1E6)
+    totalPower = sa.getPower()
+    peaks, peaksF = sa.getPeakList(minpower=-30, frequencyBase_Hz=1E6)
 
-    # Example of how to ingest a datafile. Note that bits must be set for accurate dBFS scaling
-    data = IQdata('samples.csv', sampleRate, bits=12)
-    # Once data has been ingested, pipe it into the signal analyzer object
-    sa = SignalAnalyzer(data)
-    # From there a scaled spectrum can be obtained by the following line. Note that this returns a tuple
-    freq, mag = sa.getSpectrumMag()
-    sigpwr = sa.getPower()
-    npwr = sa.getPower(maxpower=-100)
-    print(npwr)
-    print('Signal Power is: ',str(sigpwr)+'dBFS with a SNR of '+str(sigpwr-npwr)+'dB')
+    plt.plot(f, mag)
+    plt.text(-4.95, -10, 'Total Power: {power: .2f} dBFS'.format(power=totalPower))
+    peakList = 'Peak List:\n'
+    for peak, freq in zip(peaks, peaksF):
+        peakList+='{peakLevel: .2f} dBFS @ {freqPoint: .2f} MHz\n'.format(peakLevel=peak, freqPoint=freq)
+    plt.text(-4.95, -35, peakList)
 
-    # Plot example
-    plt.plot(freq, mag)
-    plt.xlabel('Freq (MHz)')
-    plt.ylabel('Magnitude (dBFS)')
-    plt.title('Sample Sinusoid\nPeak Power: ' + str(int(max(mag))) + 'dBFS')
+    plt.ylabel('Amplitude (dBFS)')
+    plt.xlabel('Frequency (MHz)')
+    plt.title('Sample IQ Data Plot')
     plt.grid()
+    plt.ylim((-100,0))
     plt.show()
+
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

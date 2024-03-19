@@ -1,2 +1,3 @@
-# IQtools
-Python utilities for processing simple spectral data
+# IQ Tools
+
+Placeholder
