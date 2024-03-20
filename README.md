@@ -1,5 +1,7 @@
 # IQ Tools
 
+v0.2.2
+
 # Build Instructions
 
 1. Clone the repo: `git clone git@github.com:loganrf/IQtools.git`
