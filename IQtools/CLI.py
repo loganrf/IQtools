@@ -2,8 +2,7 @@ import argparse
 
 from .IQdata import IQdata
 from .SignalAnalyzer import SignalAnalyzer
-from .SignalGenerator import SignalGenerator
-import numpy as np
+import matplotlib.pyplot as plt
 
 
 
@@ -38,7 +37,8 @@ def getSpectrum(args=None):
     parser.add_argument('sampleRate', help='Complex sample rate of the file', type=float)
     parser.add_argument('-f', help='Frequency Units', type=float, default=1E6)
     parser.add_argument('-b', help='Number of signed bits for the ADC', type=int, default=12)
-    parser.add_argument('-i', help='Generate a png of the spectrum instead of an ASCII plot', action='store_true')
+    parser.add_argument('-s', help='Save the image to a png instead of showing it', action='store_true')
+
 
     config = parser.parse_args(args)
     bits = config.b
@@ -46,4 +46,17 @@ def getSpectrum(args=None):
     filename = config.filename
     frequencyUnits = config.f
     data = IQdata(filename, sampleRate, bits)
+    saveFig = config.s
     sa = SignalAnalyzer(data)
+    f, mag = sa.getSpectrumMag()
+    plt.plot(f, mag)
+    plt.ylim((-100, 0))
+    plt.ylabel('dBFS')
+    plt.xlabel('MHz')
+    plt.title(filename.split('.')[0])
+    plt.tight_layout()
+    if saveFig:
+        plt.savefig(filename.split('.')[0]+'.png')
+    else:
+        plt.show()
+        plt.clf()
