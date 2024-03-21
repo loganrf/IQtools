@@ -20,5 +20,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-get_spectrum = "IQtools.CLI:get_spectrum"
-greet = "greet.location:cli"
+getPeaks = "IQtools.CLI:getPeaks"
