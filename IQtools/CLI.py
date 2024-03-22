@@ -2,6 +2,7 @@ import argparse
 
 from .IQdata import IQdata
 from .SignalAnalyzer import SignalAnalyzer
+from .SignalGenerator import SignalGenerator
 import matplotlib.pyplot as plt
 
 
@@ -60,3 +61,28 @@ def getSpectrum(args=None):
     else:
         plt.show()
         plt.clf()
+
+def generateCW(args=None):
+    parser = argparse.ArgumentParser(description='Utility for generating a CW IQ signal')
+    parser.add_argument('filename', help='Output File', type=str)
+    parser.add_argument('level', help='Output amplitude (0 to 1.0)', type=float)
+    parser.add_argument('baseBandFrequency', help='Baseband frequency (must be within Nyquist, +/- Fs/2)', type=float)
+    parser.add_argument('sampleRate', help='Complex sample rate of the file', type=float)
+    parser.add_argument('duration', help='Duration of sample file in milliseconds', type=float)
+    parser.add_argument('-p', help='phase offset (rads)', type=float, default=0)
+    parser.add_argument('-b', help='Number of signed bits for the ADC', type=int, default=12)
+
+
+
+    config = parser.parse_args(args)
+    bits = config.b
+    sampleRate = config.sampleRate
+    filename = config.filename
+    level = config.level
+    duration = config.duration
+    phaseOffset = config.p
+    bbFreq = config.baseBandFrequency
+    sg = SignalGenerator(sampleRate, bits, duration/1000)
+    sg.addSinusoid(level, bbFreq, phaseRads=phaseOffset)
+    sg.saveToFile(filename)
+
