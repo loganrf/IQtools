@@ -30,16 +30,24 @@ usage: generateCW [-h] [-p P] [-b B]
 
 Utility for generating a CW IQ signal
 
-positional arguments:
+**positional arguments:**
+
   filename           Output File
+
   level              Output amplitude (0 to 1.0)
+
   baseBandFrequency  Baseband frequency (must be within Nyquist, +/- Fs/2)
+
   sampleRate         Complex sample rate of the file
+
   duration           Duration of sample file in milliseconds
 
-options:
+**options:**
+
   -h, --help         show this help message and exit
+
   -p P               phase offset (rads)
+
   -b B               Number of signed bits for the ADC
 
 ## `getSpectrum`
@@ -48,14 +56,20 @@ usage: getSpectrum [-h] [-f F] [-b B] [-s] filename sampleRate
 
 Utility for generating a frequency spectrum from an IQ data file
 
-positional arguments:
+**positional arguments:**
+
   filename    File with IQ data
+
   sampleRate  Complex sample rate of the file
 
-options:
+**options:**
+
   -h, --help  show this help message and exit
+
   -f F        Frequency Units
+
   -b B        Number of signed bits for the ADC
+
   -s          Save the image to a png instead of showing it
 
 ## `getPeaks`
@@ -64,12 +78,18 @@ usage: getPeaks [-h] [-f F] [-b B] [-t T] filename sampleRate
 
 Utility for getting peak spectrum values from an IQ data file
 
-positional arguments:
+**positional arguments:**
+
   filename    File with IQ data
+
   sampleRate  Complex sample rate of the file
 
-options:
+**options:**
+
   -h, --help  show this help message and exit
+
   -f F        Frequency Units
+
   -b B        Number of signed bits for the ADC
+
   -t T        Threshold for peak detection (In dBFS by default)
