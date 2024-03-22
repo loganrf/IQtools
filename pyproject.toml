@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iqtools"
-version = "0.7.0"
+version = "0.7.1"
 description = "Utility for working with IQ waveform data"
 authors = ["Logan <logan@sige.dev>"]
 readme = "README.md"
@@ -22,4 +22,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 getPeaks = "IQtools.CLI:getPeaks"
 getSpectrum = "IQtools.CLI:getSpectrum"
-generateSignal = "IQtools.CLI:generateCW"
+generateCW = "IQtools.CLI:generateCW"
