@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iqtools"
-version = "0.7.2"
+version = "0.7.3"
 description = "Utility for working with IQ waveform data"
 authors = ["Logan <logan@sige.dev>"]
 readme = "README.md"

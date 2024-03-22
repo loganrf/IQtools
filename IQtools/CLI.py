@@ -49,7 +49,7 @@ def getSpectrum(args=None):
     data = IQdata(filename, sampleRate, bits)
     saveFig = config.s
     sa = SignalAnalyzer(data)
-    f, mag = sa.getSpectrumMag()
+    f, mag = sa.getSpectrumMag(frequencyBase_Hz=frequencyUnits)
     plt.plot(f, mag)
     plt.ylim((-100, 0))
     plt.ylabel('dBFS')
