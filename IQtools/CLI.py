@@ -55,6 +55,7 @@ def getSpectrum(args=None):
     plt.ylabel('dBFS')
     plt.xlabel('MHz')
     plt.title(filename.split('.')[0])
+    plt.grid()
     plt.tight_layout()
     if saveFig:
         plt.savefig(filename.split('.')[0]+'.png')
