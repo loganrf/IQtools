@@ -17,7 +17,7 @@ This module is a set of utilities for working with IQ data.
 
 ## Install as CLI Utility
 
-1. Install pipx (`brew install pipx`, `apt install pipx` etc depending on OS)
+1. Install pipx. `brew install pipx`, `apt install pipx` or check other options [here](https://pipx.pypa.io/stable/installation/).
 2. Install iqtools: `pipx install iqtools`
 3. You should now be able to run the CLI commands from your normal terminal!
 
