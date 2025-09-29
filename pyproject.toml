@@ -13,6 +13,7 @@ numpy = "^1.26.4"
 scipy = "^1.12.0"
 matplotlib = "^3.8.3"
 argparse = "^1.4.0"
+PyQt6 = "^6.6.1"
 
 
 [build-system]
@@ -23,3 +24,4 @@ build-backend = "poetry.core.masonry.api"
 getPeaks = "IQtools.CLI:getPeaks"
 getSpectrum = "IQtools.CLI:getSpectrum"
 generateCW = "IQtools.CLI:generateCW"
+iqtools-gui = "IQtools.qt_spectrum:main"
