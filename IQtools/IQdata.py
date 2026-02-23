@@ -18,11 +18,16 @@
 
 from enum import Enum
 
+import numpy as np
+
+from . import conversion
+
 
 class DataFormats(Enum):
     IQ = 0
     INTERP = 1
     SEQ = 2
+    WFM = 3
 
 
 def load_IQ(file, bits):
@@ -49,6 +54,7 @@ class IQdata:
         self.bits = bits
         self.format = format
         self.refOffset = refOffset
+        self.metadata = None
         self.loadData(fileName)
         self.datalen = len(self.samples)
 
@@ -57,8 +63,18 @@ class IQdata:
         Helper function for loading samples from a file
         :param fileName:
         """
-        file = open(fileName, 'r')
         if self.format == DataFormats.IQ:
-            self.samples = load_IQ(file, self.bits)
+            file = open(fileName, 'r')
+            try:
+                self.samples = load_IQ(file, self.bits)
+            finally:
+                file.close()
+        elif self.format == DataFormats.WFM:
+            samples, metadata = conversion.load_waveform(fileName, bits=self.bits)
+            self.samples = list(samples)
+            if metadata.sample_rate:
+                self.sampleRate = metadata.sample_rate
+            self.metadata = metadata
         else:
             raise ValueError('Unsupported IQ File Format Supplied')
+        self.samples = np.asarray(self.samples, dtype=np.complex64)

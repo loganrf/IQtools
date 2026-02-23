@@ -2,6 +2,17 @@
 
 This module is a set of utilities for working with IQ data.
 
+## What's New
+
+* Conversion helpers (`IQtools.conversion`) to load and save waveform files from
+  common instrument ecosystems, including Rohde & Schwarz `.wfm` binaries.
+* A PyQt6 spectrum analyzer/oscilloscope (`iqtools-gui`) that visualises IQ
+  data in both the time and frequency domains with FS/dBFS scaling.
+* Interactive time selection to focus FFT analysis on a sub-interval of the
+  waveform.
+* Integrated waveform synthesis for discrete sinusoids as well as BPSK,
+  multi-symbol FSK, and 4-QAM modulation profiles.
+
 # Build & Installation
 
 ## Build Instructions
@@ -9,6 +20,9 @@ This module is a set of utilities for working with IQ data.
 1. Clone the repo: `git clone git@github.com:loganrf/IQtools.git`
 2. Install dependencies: `poetry install`
 3. Build: `poetry build`
+
+To launch the interactive GUI after installing dependencies run
+`poetry run iqtools-gui`.
 
 ## Example Run Instructions
 
